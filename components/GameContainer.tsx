@@ -4,24 +4,27 @@ import { database, auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import PlayerIcon from "./PlayerIcon";
 
+interface Player {
+  x?: number;
+  y?: number;
+  color?: string;
+  name?: string;
+}
 
 const GameContainer = () => {
-  const [players, setPlayers] = useState({});
+  const [players, setPlayers] = useState<{ [key:string]: Player}>({});
   const [currentPlayerEmail, setCurrentPlayerEmail] = useState("");
   let playerId:any = "";
   
   let playerRef:any;
-
-
-  
-
   
     useEffect(() => {
       const canMoveTo = (newX: number, newY:number) => {
         return newX >= 0 && newX <= 46 && newY >= 0 && newY <= 43;
       }
       const updatePosition = (newX:number, newY:number) => {
-        set(playerRef, players[playerId]);
+        set(playerRef,  players[playerId]);
+        
         if (auth.currentUser && auth.currentUser.email) {
           setCurrentPlayerEmail(auth.currentUser.email);
         }
