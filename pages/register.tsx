@@ -10,7 +10,7 @@ function Register() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleRegistration = async (e) => {
+  const handleRegistration = async (e:any) => {
     e.preventDefault();
     const generateColor = () => {
       return Math.floor(Math.random()*16777215).toString(16);       

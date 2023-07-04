@@ -1,4 +1,4 @@
-import { use, useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { ref, set, onValue } from "firebase/database";
 import { database, auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -8,7 +8,7 @@ import PlayerIcon from "./PlayerIcon";
 const GameContainer = () => {
   const [players, setPlayers] = useState({});
   const [currentPlayerEmail, setCurrentPlayerEmail] = useState("");
-  let playerId = "";
+  let playerId:any = "";
   
   let playerRef:any;
 
@@ -22,7 +22,9 @@ const GameContainer = () => {
       }
       const updatePosition = (newX:number, newY:number) => {
         set(playerRef, players[playerId]);
-        setCurrentPlayerEmail(auth.currentUser.email);
+        if (auth.currentUser && auth.currentUser.email) {
+          setCurrentPlayerEmail(auth.currentUser.email);
+        }
       }
 
       function handleKeyPress(key: any) {

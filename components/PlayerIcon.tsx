@@ -1,6 +1,6 @@
 
 
-const PlayerIcon = ({currentPlayer, x, y, name, color}) => {
+const PlayerIcon = ({currentPlayer, x, y, name, color}:any) => {
 
     if (currentPlayer.substring(0, currentPlayer.indexOf("@")) == name ) {
 

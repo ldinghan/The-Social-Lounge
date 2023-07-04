@@ -9,7 +9,7 @@ function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     
-    const handleLogin = async (e) => {
+    const handleLogin = async (e:any) => {
       e.preventDefault();
       try {
         await signInWithEmailAndPassword(auth, email, password);
