@@ -5,6 +5,7 @@ import Timer from "./Timer";
 
 
 interface Coin {
+    id:string;
     x:number;
     y:number;
 }
@@ -16,16 +17,18 @@ const CoinBtn = () => {
     const [coins, setCoins] = useState<{ [key:number|string]: Coin}>({});
     const [disabled, setDisabled] = useState(true);
     const [timerComponent, setTimerComponent] = useState(<Timer initialMinute={3} initialSeconds={0}/>);
+    
+    
     const drawCoin = async () => {
         const coinRef = ref(database, 'coins');
         setCoins(((await get(coinRef)).val() || {}));
         const coinCountRef = ref(database, 'coins/count');
         const coinCount = (await get(coinCountRef)).val();
 
-        const x:number = Math.random()*46;
-        const y:number = Math.random()*46;
-        const id:number = coinCount;
-        coins[id] = {x, y};
+        const x:number = Math.random()*43;
+        const y:number = Math.random()*43;
+        const id:string = coinCount;
+        coins[id] = { id, x, y};
         set(coinRef, {
           coinList: coins,
           count: coinCount+1

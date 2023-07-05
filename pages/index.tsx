@@ -39,7 +39,7 @@ export default function Home() {
         <Navbar />
         {isLoggedIn && <p>Hi {username}!</p>}
         <CoinBtn />
-        <div className='w-[85vw] h-[85vh] flex justify-center items-center'>
+        <div className='w-[600px] h-[600px] flex justify-center items-center'>
           <GameContainer />
           
         </div>

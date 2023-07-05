@@ -8,12 +8,12 @@ interface PlayerIcon {
 
 const PlayerIcon = ({currentPlayer, x, y, name, color}:PlayerIcon) => {
 
-    const tailwindCSS = `w-[100px] h-[100px] absolute flex justify-center items-center`;
+    const tailwindCSS = `w-[15%] h-[15%] absolute flex justify-center items-center`;
     const style = {
         left: `${x*2}%`,
         top: `${y*2}%`,
         backgroundColor: color,
-        border: `${currentPlayer.substring(0, currentPlayer.indexOf("@")) == name ? '5px solid #FFFFBB' : ''}`
+        border: `${currentPlayer.substring(0, currentPlayer.indexOf("@")) == name ? '3px solid #FFFFBB' : ''}`
     }
     return (
         <>

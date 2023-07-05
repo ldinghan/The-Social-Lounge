@@ -13,6 +13,7 @@ interface Player {
 }
 
 interface Coin {
+  id: string;
   x: number;
   y: number;
 }
@@ -28,7 +29,7 @@ const GameContainer = () => {
     useEffect(() => {
       
       const canMoveTo = (newX: number, newY:number) => {
-        return newX >= 0 && newX <= 46 && newY >= 0 && newY <= 43;
+        return newX >= 0 && newX <= 43 && newY >= 0 && newY <= 43;
       }
 
       const updatePosition = (newX:number, newY:number) => {
@@ -93,9 +94,7 @@ const GameContainer = () => {
             playerId = user.uid;
             playerRef = ref(database, `players/${playerId}`);
             players[playerId] = players[playerId] || {};
-        } else {
-          
-        }
+        } 
       })  
 
 
@@ -110,7 +109,7 @@ const GameContainer = () => {
             return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[playerId].color} x={players[playerId].x} y={players[playerId].y} key={playerId} name={players[playerId].name}/>
           })}
           {Object.keys(coins).map((id) => {
-            return <CoinIcon x={coins[id].x} y={coins[id].y} key={id}/>
+            return <CoinIcon id={id} x={coins[id].x} y={coins[id].y} key={id}/>
           })}
         </div>
     )
