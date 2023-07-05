@@ -71,14 +71,12 @@ const GameContainer = () => {
       };
     }, [playerRef, players, playerId])
 
+    const allPlayersRef = ref(database, 'players');
+    const allCoinsRef = ref(database, 'coins/coinList');
     useEffect(() => {
-      const allPlayersRef = ref(database, 'players');
-      
-      onValue(allPlayersRef, (snapshot) => {
+        onValue(allPlayersRef, (snapshot) => {
         setPlayers(snapshot.val() || {});
       })
-
-      const allCoinsRef = ref(database, 'coins/coinList');
       onValue(allCoinsRef, (snapshot) => {
           setCoins(snapshot.val() || {});
       })

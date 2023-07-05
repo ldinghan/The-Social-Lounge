@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react"; 
 import { ref, get, set, onValue } from "firebase/database";
 import { database } from "../firebase";
+import Timer from "./Timer";
 
 
 interface Coin {
     x:number;
     y:number;
 }
+
+
+
 const CoinBtn = () => {
+    const [timerKey, setTimerKey] = useState(0);
     const [coins, setCoins] = useState<{ [key:number|string]: Coin}>({});
+    const [disabled, setDisabled] = useState(true);
+    const [timerComponent, setTimerComponent] = useState(<Timer initialMinute={3} initialSeconds={0}/>);
     const drawCoin = async () => {
         const coinRef = ref(database, 'coins');
         setCoins(((await get(coinRef)).val() || {}));
@@ -25,28 +32,19 @@ const CoinBtn = () => {
         });
       }
 
-
+      const allCoinsRef = ref(database, 'coins/coinList');
       useEffect(() => {
-        const allCoinsRef = ref(database, 'coins/coinList');
         onValue(allCoinsRef, (snapshot) => {
             setCoins(snapshot.val() || {});
           })
-      })
-
-
-
-    const [disabled, setDisabled] = useState(true);
+      }, []);
 
     const handleClick = () => {
-        console.log('clicked')
         drawCoin();
+        setTimerComponent(<Timer initialMinute={3} initialSeconds={0} key={timerKey}/>);
+        setTimerKey(key => key + 1);
         setDisabled(true);
     }
-
-
-
-
-
 
 
     useEffect(() => {
@@ -56,8 +54,13 @@ const CoinBtn = () => {
 
         return () => clearTimeout(timer);
     }, [disabled]);
+
     return (
-        <button title="You can only generate one coin every 3 minutes." className="bg-green-600" onClick={handleClick} disabled={disabled} type="button">GENERATE COIN</button>
+        <>
+            {timerComponent}
+            <button title="You can only generate one coin every 3 minutes." className="bg-green-600" onClick={handleClick} disabled={disabled} type="button">GENERATE COIN</button>
+            
+        </>
     )
 }
 
