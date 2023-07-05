@@ -8,7 +8,6 @@ const Navbar = () => {
     const [navbarLoggedIn, setNavbarLoggedIn] = useState(false);
     const handleSignOut = () => {
         signOut(auth).then(() => {
-          console.log("signed out");
           setNavbarLoggedIn(false);
         }).catch((error) => {
           console.error(error)

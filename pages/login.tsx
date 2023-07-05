@@ -15,7 +15,6 @@ function Login() {
         await signInWithEmailAndPassword(auth, email, password);
         // User successfully logged in
         window.location.href="/";
-        console.log("logged in")
       } catch (error:any) {
         setError(error.message);
       }

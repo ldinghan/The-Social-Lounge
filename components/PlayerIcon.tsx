@@ -1,11 +1,12 @@
+interface PlayerIcon {
+    currentPlayer: string;
+    x: number;
+    y: number;
+    name: string;
+    color: string;
+}
 
-
-const PlayerIcon = ({currentPlayer, x, y, name, color}:any) => {
-
-    if (currentPlayer.substring(0, currentPlayer.indexOf("@")) == name ) {
-
-    }
-
+const PlayerIcon = ({currentPlayer, x, y, name, color}:PlayerIcon) => {
 
     const tailwindCSS = `w-[100px] h-[100px] absolute flex justify-center items-center`;
     const style = {

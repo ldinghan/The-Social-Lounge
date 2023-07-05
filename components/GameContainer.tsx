@@ -1,30 +1,40 @@
 import { useEffect, useState } from "react";
-import { ref, set, onValue } from "firebase/database";
+import { ref, set, onValue, get } from "firebase/database";
 import { database, auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import PlayerIcon from "./PlayerIcon";
+import CoinIcon from "./CoinIcon";
 
 interface Player {
-  x?: number;
-  y?: number;
-  color?: string;
-  name?: string;
+  x: number;
+  y: number;
+  color: string;
+  name: string;
+}
+
+interface Coin {
+  x: number;
+  y: number;
 }
 
 const GameContainer = () => {
   const [players, setPlayers] = useState<{ [key:string]: Player}>({});
+  const [coins, setCoins] = useState<{ [key:number|string]: Coin}>({});
   const [currentPlayerEmail, setCurrentPlayerEmail] = useState("");
   let playerId:any = "";
   
   let playerRef:any;
   
     useEffect(() => {
+      
       const canMoveTo = (newX: number, newY:number) => {
         return newX >= 0 && newX <= 46 && newY >= 0 && newY <= 43;
       }
+
       const updatePosition = (newX:number, newY:number) => {
+        players[playerId].x = newX;
+        players[playerId].y = newY;
         set(playerRef,  players[playerId]);
-        
         if (auth.currentUser && auth.currentUser.email) {
           setCurrentPlayerEmail(auth.currentUser.email);
         }
@@ -51,10 +61,7 @@ const GameContainer = () => {
         const newY = (players[playerId]?.y || 0) + yChange;
         if (canMoveTo(newX, newY)) { //if can move
           players[playerId] = players[playerId] || {};
-          players[playerId].x = newX;
-          players[playerId].y = newY;
           updatePosition(newX, newY);
-          
         }
       }
       document.addEventListener("keydown", handleKeyPress);
@@ -66,43 +73,47 @@ const GameContainer = () => {
 
     useEffect(() => {
       const allPlayersRef = ref(database, 'players');
+      
       onValue(allPlayersRef, (snapshot) => {
         setPlayers(snapshot.val() || {});
+      })
 
-        
-        
+      const allCoinsRef = ref(database, 'coins/coinList');
+      onValue(allCoinsRef, (snapshot) => {
+          setCoins(snapshot.val() || {});
       })
     }, []);
-
-
 
 
     if (auth.currentUser) {
         playerId = auth.currentUser.uid;
         playerRef = ref(database, `players/${playerId}`);
+
     }
     onAuthStateChanged(auth, (user:any) => {
         if (user) {
             playerId = user.uid;
             playerRef = ref(database, `players/${playerId}`);
+            players[playerId] = players[playerId] || {};
         } else {
-          console.log("user signed out");
           
         }
       })  
-  
+
+
 
       
-    console.log(currentPlayerEmail)
 
     
     return (
         <div className="w-full h-full bg-emerald-100 relative">
 
           {Object.keys(players).map((playerId) => {
-            return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[playerId]?.color} x={players[playerId]?.x} y={players[playerId]?.y} key={playerId} name={players[playerId]?.name}/>
+            return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[playerId].color} x={players[playerId].x} y={players[playerId].y} key={playerId} name={players[playerId].name}/>
           })}
-          
+          {Object.keys(coins).map((id) => {
+            return <CoinIcon x={coins[id].x} y={coins[id].y} key={id}/>
+          })}
         </div>
     )
   }

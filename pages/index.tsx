@@ -1,28 +1,23 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import { onAuthStateChanged } from 'firebase/auth';
-import { ref, set } from "firebase/database";
-import { auth, database } from "../firebase";
+import { auth } from "../firebase";
 import { useState } from "react";
 import Navbar from '../components/Navbar';
 import GameContainer from '../components/GameContainer';
+import CoinBtn from '../components/CoinBtn';
 
 
 export default function Home() {
   
-  let players:any = {};
-  let allPlayersRef = ref(database, 'players');
-  let playerId:string, playerRef:any;
+  
   const [username, setUsername] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   onAuthStateChanged(auth, (user:any) => {
     if (user) {
       setIsLoggedIn(true);
-      console.log(user.email);
       setUsername(user.email.substring(0, user.email.indexOf("@")));
       
     } else {
-      console.log("user signed out");
       setIsLoggedIn(false);
     }
   })  
@@ -43,8 +38,10 @@ export default function Home() {
       <div className='flex flex-col justify-center items-center'>
         <Navbar />
         {isLoggedIn && <p>Hi {username}!</p>}
+        <CoinBtn />
         <div className='w-[85vw] h-[85vh] flex justify-center items-center'>
           <GameContainer />
+          
         </div>
       </div>
     </>
