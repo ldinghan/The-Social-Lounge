@@ -5,7 +5,6 @@ import { useState } from "react";
 import Navbar from '../components/Navbar';
 import GameContainer from '../components/GameContainer';
 import CoinBtn from '../components/CoinBtn';
-import Timer from '../components/Timer';
 
 export default function Home() {
   
