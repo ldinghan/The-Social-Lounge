@@ -5,6 +5,7 @@ import { useState } from "react";
 import Navbar from '../components/Navbar';
 import GameContainer from '../components/GameContainer';
 import CoinBtn from '../components/CoinBtn';
+import SettingsContainer from '../components/SettingsContainer';
 
 export default function Home() {
   
@@ -36,7 +37,12 @@ export default function Home() {
       </Head>
       <div className='flex flex-col justify-center items-center'>
         <Navbar />
-        {isLoggedIn ? <><p>Hi {username}!</p><CoinBtn/></> : <div className='my-4'></div>}
+        {isLoggedIn ? 
+          <>
+            <p>Hi {username}!</p>
+            <CoinBtn/>
+            <SettingsContainer/>
+          </> : <div className='my-4'></div>}
         
         <div className='w-[600px] h-[600px] flex justify-center items-center'>
           <GameContainer />

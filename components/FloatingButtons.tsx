@@ -2,24 +2,24 @@ import { useEffect, useState } from "react";
 import { ref, onValue, remove, update } from "firebase/database";
 import { database, auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import PlayerIcon from "./PlayerIcon";
-import CoinIcon from "./CoinIcon";
 
 interface Player {
-  x: number;
-  y: number;
-  color: string;
-  name: string;
-  coins: number;
-}
+    x: number;
+    y: number;
+    color: string;
+    name: string;
+    coins: number;
+  }
+  
+  interface Coin {
+    id: string;
+    x: number;
+    y: number;
+  }
 
-interface Coin {
-  id: string;
-  x: number;
-  y: number;
-}
 
-const GameContainer = () => {
+const FloatingButtons = () => {
+  const [moving, setMoving] = useState(false);
   const [players, setPlayers] = useState<{ [key:string]: Player}>({});
   const [coins, setCoins] = useState<{ [key:number|string]: Coin}>({});
   const [currentPlayerEmail, setCurrentPlayerEmail] = useState("");
@@ -27,7 +27,7 @@ const GameContainer = () => {
   let playerRef:any;
   const allPlayersRef = ref(database, 'players');
   const allCoinsRef = ref(database, 'coins/coinList');
-
+  const [direction, setDirection] = useState("");
 
   if (auth.currentUser) {
     playerId = auth.currentUser.uid;
@@ -43,8 +43,8 @@ const GameContainer = () => {
         setCurrentPlayerEmail("");
     }
   })  
-  
-    useEffect(() => {
+
+  useEffect(() => {
       const collectCoin = (id:string) => {
         players[playerId].coins++;
         update(playerRef,  players[playerId]);
@@ -80,13 +80,13 @@ const GameContainer = () => {
         }
         let xChange = 0;
         let yChange = 0;
-        if (key.code === "ArrowUp") {
+        if (key === "ArrowUp") {
           yChange = -1;
-        } else if (key.code === "ArrowDown") {
+        } else if (key === "ArrowDown") {
           yChange = 1;
-        } else if (key.code === "ArrowLeft") {
+        } else if (key === "ArrowLeft") {
           xChange = -1;
-        } else if (key.code === "ArrowRight") {
+        } else if (key === "ArrowRight") {
           xChange = 1;
         } else {
           return;
@@ -99,41 +99,44 @@ const GameContainer = () => {
           checkCoin(newX, newY);
         }
       }
-      document.addEventListener("keydown", handleKeyPress);
-      // clean up
-      return () => {
-        document.removeEventListener("keydown", handleKeyPress);
-      };
-    }, [players])
+      let interval:ReturnType<typeof setInterval>;
+      if (moving) {
+        interval = setInterval(() => {
+          handleKeyPress(direction);
+        }, 100)
+      }
+      return () => clearInterval(interval)
+    }, [moving])
 
-
+    const handleKeyDown = (arrowKey:string) => {
+      setDirection(arrowKey)
+      setMoving(true);
+    }
+    const handleKeyRelease = () => {
+      setDirection("");
+        setMoving(false);
+    }
     useEffect(() => {
-        onValue(allPlayersRef, (snapshot) => {
-        setPlayers(snapshot.val() || {});
-      })
-      onValue(allCoinsRef, (snapshot) => {
-          setCoins(snapshot.val() || {});
-      })
-    }, []);
-
-
-
-
-
-      
-
+      onValue(allPlayersRef, (snapshot) => {
+      setPlayers(snapshot.val() || {});
+    })
+    onValue(allCoinsRef, (snapshot) => {
+        setCoins(snapshot.val() || {});
+    })
+  }, []);
     return (
-        <div className="w-full h-full bg-emerald-100 relative">
-
-          {Object.keys(players).map((id) => {
-            return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[id].color} x={players[id].x} y={players[id].y} key={id} name={players[id].name} coins={players[id].coins}/>
-          })}
-          {Object.keys(coins).map((id) => {
-            return <CoinIcon id={id} x={coins[id].x} y={coins[id].y} key={id}/>
-          })}
+        <div className="grid grid-rows-3 grid-cols-3 fixed bottom-10 left-10 w-40 h-40 border border-4 border-red-500">
+            <div></div>
+            <button className="" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowUp")} onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowUp")}>UP</button>
+            <div></div>
+            <button className="" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowLeft")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowLeft")}>LEFT</button>
+            <div></div>
+            <button className="" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowRight")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowRight")}>RIGHT</button>
+            <div></div>
+            <button className="" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowDown")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowDown")}>DOWN</button>
+            <div></div>
         </div>
     )
-  }
+}
 
-
-export default GameContainer;
+export default FloatingButtons;
