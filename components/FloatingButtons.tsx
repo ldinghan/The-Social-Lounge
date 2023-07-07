@@ -125,15 +125,15 @@ const FloatingButtons = () => {
     })
   }, []);
     return (
-        <div className="grid grid-rows-3 grid-cols-3 fixed bottom-10 left-10 w-40 h-40 border border-4 border-red-500">
+        <div className="z-[1000] grid grid-rows-3 grid-cols-3 fixed bottom-10 left-10 w-40 h-40">
             <div></div>
-            <button className="" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowUp")} onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowUp")}>UP</button>
+            <button className="border border-4 border-red-400 bg-gray-400 rounded-lg" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowUp")} onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowUp")}>UP</button>
             <div></div>
-            <button className="" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowLeft")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowLeft")}>LEFT</button>
+            <button className="border border-4 border-red-400 bg-gray-400 rounded-lg" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowLeft")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowLeft")}>LEFT</button>
             <div></div>
-            <button className="" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowRight")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowRight")}>RIGHT</button>
+            <button className="border border-4 border-red-400 bg-gray-400 rounded-lg" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowRight")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowRight")}>RIGHT</button>
             <div></div>
-            <button className="" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowDown")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowDown")}>DOWN</button>
+            <button className="border border-4 border-red-400 bg-gray-400 rounded-lg" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowDown")}onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowDown")}>DOWN</button>
             <div></div>
         </div>
     )
