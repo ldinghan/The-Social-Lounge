@@ -30,7 +30,7 @@ const Timer = ({ initialMinute, initialSeconds }:Timer) => {
 
     return (
         <div>
-        <h1> {minutes}:{seconds < 10 ?  `0${seconds}` : seconds}</h1> 
+        <p>{minutes}:{seconds < 10 ?  `0${seconds}` : seconds}</p> 
         
         </div>
     )

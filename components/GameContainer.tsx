@@ -29,8 +29,6 @@ const GameContainer = () => {
   const allCoinsRef = ref(database, 'coins/coinList');
 
 
-
-
   if (auth.currentUser) {
     playerId = auth.currentUser.uid;
     playerRef = ref(database, `players/${playerId}`);

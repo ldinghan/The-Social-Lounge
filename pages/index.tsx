@@ -36,8 +36,8 @@ export default function Home() {
       </Head>
       <div className='flex flex-col justify-center items-center'>
         <Navbar />
-        {isLoggedIn && <p>Hi {username}!</p>}
-        <CoinBtn />
+        {isLoggedIn ? <><p>Hi {username}!</p><CoinBtn/></> : <div className='my-4'></div>}
+        
         <div className='w-[600px] h-[600px] flex justify-center items-center'>
           <GameContainer />
           

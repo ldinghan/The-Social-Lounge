@@ -62,7 +62,7 @@ const CoinBtn = () => {
         <>
             {timerComponent}
             <button title="You can only generate one coin every 3 minutes." className="bg-green-600" onClick={handleClick} disabled={disabled} type="button">GENERATE COIN</button>
-            
+            {disabled && <span className="text-sm">You can only generate one coin every 3 minutes.</span>}
         </>
     )
 }
