@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ref, set, onValue, get } from "firebase/database";
+import { ref, onValue, remove, update } from "firebase/database";
 import { database, auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import PlayerIcon from "./PlayerIcon";
@@ -10,6 +10,7 @@ interface Player {
   y: number;
   color: string;
   name: string;
+  coins: number;
 }
 
 interface Coin {
@@ -23,11 +24,45 @@ const GameContainer = () => {
   const [coins, setCoins] = useState<{ [key:number|string]: Coin}>({});
   const [currentPlayerEmail, setCurrentPlayerEmail] = useState("");
   let playerId:any = "";
-  
   let playerRef:any;
+  const allPlayersRef = ref(database, 'players');
+  const allCoinsRef = ref(database, 'coins/coinList');
+
+
+
+
+  if (auth.currentUser) {
+    playerId = auth.currentUser.uid;
+    playerRef = ref(database, `players/${playerId}`);
+  }
+  onAuthStateChanged(auth, (user:any) => {
+    if (user) {
+        playerId = user.uid;
+        playerRef = ref(database, `players/${playerId}`);
+        players[playerId] = players[playerId] || {};
+    } 
+    else {
+        setCurrentPlayerEmail("");
+    }
+  })  
   
     useEffect(() => {
-      
+      const collectCoin = (id:string) => {
+        players[playerId].coins++;
+        update(playerRef,  players[playerId]);
+        const coinRef = ref(database, `coins/coinList/${id}`)
+        remove(coinRef);
+      }
+
+      const checkCoin = (newX: number, newY: number) => {
+        Object.keys(coins).map((id) => {
+          if (Math.abs(newX - (coins[id].x-1.5)) < 4 &&
+              Math.abs(newY - (coins[id].y-2)) < 4) {
+            collectCoin(id);
+          }
+        })
+      }
+
       const canMoveTo = (newX: number, newY:number) => {
         return newX >= 0 && newX <= 43 && newY >= 0 && newY <= 43;
       }
@@ -35,7 +70,7 @@ const GameContainer = () => {
       const updatePosition = (newX:number, newY:number) => {
         players[playerId].x = newX;
         players[playerId].y = newY;
-        set(playerRef,  players[playerId]);
+        update(playerRef,  players[playerId]);
         if (auth.currentUser && auth.currentUser.email) {
           setCurrentPlayerEmail(auth.currentUser.email);
         }
@@ -63,6 +98,7 @@ const GameContainer = () => {
         if (canMoveTo(newX, newY)) { //if can move
           players[playerId] = players[playerId] || {};
           updatePosition(newX, newY);
+          checkCoin(newX, newY);
         }
       }
       document.addEventListener("keydown", handleKeyPress);
@@ -72,8 +108,7 @@ const GameContainer = () => {
       };
     }, [playerRef, players, playerId])
 
-    const allPlayersRef = ref(database, 'players');
-    const allCoinsRef = ref(database, 'coins/coinList');
+
     useEffect(() => {
         onValue(allPlayersRef, (snapshot) => {
         setPlayers(snapshot.val() || {});
@@ -84,29 +119,16 @@ const GameContainer = () => {
     }, []);
 
 
-    if (auth.currentUser) {
-        playerId = auth.currentUser.uid;
-        playerRef = ref(database, `players/${playerId}`);
-
-    }
-    onAuthStateChanged(auth, (user:any) => {
-        if (user) {
-            playerId = user.uid;
-            playerRef = ref(database, `players/${playerId}`);
-            players[playerId] = players[playerId] || {};
-        } 
-      })  
 
 
 
       
 
-    
     return (
         <div className="w-full h-full bg-emerald-100 relative">
 
-          {Object.keys(players).map((playerId) => {
-            return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[playerId].color} x={players[playerId].x} y={players[playerId].y} key={playerId} name={players[playerId].name}/>
+          {Object.keys(players).map((id) => {
+            return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[id].color} x={players[id].x} y={players[id].y} key={id} name={players[id].name} coins={players[id].coins}/>
           })}
           {Object.keys(coins).map((id) => {
             return <CoinIcon id={id} x={coins[id].x} y={coins[id].y} key={id}/>

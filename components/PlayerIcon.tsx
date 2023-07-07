@@ -1,14 +1,16 @@
+
 interface PlayerIcon {
     currentPlayer: string;
     x: number;
     y: number;
     name: string;
     color: string;
+    coins: number;
 }
 
-const PlayerIcon = ({currentPlayer, x, y, name, color}:PlayerIcon) => {
+const PlayerIcon = ({currentPlayer, x, y, name, color, coins}:PlayerIcon) => {
 
-    const tailwindCSS = `w-[15%] h-[15%] absolute flex justify-center items-center`;
+    const tailwindCSS = `w-[15%] h-[15%] absolute flex flex-col justify-center items-center`;
     const style = {
         left: `${x*2}%`,
         top: `${y*2}%`,
@@ -18,7 +20,8 @@ const PlayerIcon = ({currentPlayer, x, y, name, color}:PlayerIcon) => {
     return (
         <>
             <div style={style} className={tailwindCSS}>
-                <p className="bg-white text-center w-fit px-3">{name}</p>    
+                <p className="bg-white text-center w-fit px-3">{name}</p>
+                <p className="mt-1 text-center bg-gray-200 w-fit px-3">{coins}</p>    
             </div>
         </>
     )

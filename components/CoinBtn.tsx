@@ -25,8 +25,8 @@ const CoinBtn = () => {
         const coinCountRef = ref(database, 'coins/count');
         const coinCount = (await get(coinCountRef)).val();
 
-        const x:number = Math.random()*43;
-        const y:number = Math.random()*43;
+        const x:number = Math.round(Math.random()*43);
+        const y:number = Math.round(Math.random()*43);
         const id:string = coinCount;
         coins[id] = { id, x, y};
         set(coinRef, {
