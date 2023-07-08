@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import GameContainer from '../components/GameContainer';
 import CoinBtn from '../components/CoinBtn';
 import SettingsContainer from '../components/SettingsContainer';
+import ChatBox from '../components/ChatBox';
 
 export default function Home() {
   
@@ -41,12 +42,11 @@ export default function Home() {
           <>
             <p>Hi {username}!</p>
             <CoinBtn/>
-            <SettingsContainer/>
+            <SettingsContainer username={username}/>
           </> : <div className='my-4'></div>}
         
         <div className='w-[600px] h-[600px] flex justify-center items-center'>
           <GameContainer />
-          
         </div>
       </div>
     </>

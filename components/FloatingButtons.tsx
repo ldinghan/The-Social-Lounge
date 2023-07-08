@@ -101,6 +101,7 @@ const FloatingButtons = () => {
       }
       let interval:ReturnType<typeof setInterval>;
       if (moving) {
+        handleKeyPress(direction);
         interval = setInterval(() => {
           handleKeyPress(direction);
         }, 100)
@@ -118,14 +119,14 @@ const FloatingButtons = () => {
     }
     useEffect(() => {
       onValue(allPlayersRef, (snapshot) => {
-      setPlayers(snapshot.val() || {});
-    })
-    onValue(allCoinsRef, (snapshot) => {
+        setPlayers(snapshot.val() || {});
+      })
+      onValue(allCoinsRef, (snapshot) => {
         setCoins(snapshot.val() || {});
-    })
-  }, []);
+      })
+    }, []);
     return (
-        <div className="z-[1000] grid grid-rows-3 grid-cols-3 fixed bottom-10 left-10 w-40 h-40">
+        <div className="select-none z-[1000] grid grid-rows-3 grid-cols-3 fixed bottom-10 left-10 w-40 h-40">
             <div></div>
             <button className="border border-4 border-red-400 bg-gray-400 rounded-lg" onTouchEnd={handleKeyRelease} onTouchStart={e => handleKeyDown("ArrowUp")} onMouseUp={handleKeyRelease} onMouseDown={e => handleKeyDown("ArrowUp")}>UP</button>
             <div></div>
