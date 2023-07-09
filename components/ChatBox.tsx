@@ -26,10 +26,6 @@ const ChatBox = ({username}:ChatBox) => {
     const messageDBRef = ref(database, 'chatHistory');
 
     useEffect(() => {
-        const initChatBox = async () => {
-            setMessageCount((await get(messageCountRef)).val());
-        }
-        initChatBox();
         onValue(messageDBRef, (snapshot) => {
             setAllMessages(snapshot.val().messages);
         })

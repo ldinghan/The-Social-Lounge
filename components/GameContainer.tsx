@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { ref, onValue, remove, update } from "firebase/database";
+import { useEffect, useState,  } from "react";
+import { ref, onValue, remove, update, get } from "firebase/database";
 import { database, auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import PlayerIcon from "./PlayerIcon";
 import CoinIcon from "./CoinIcon";
+import Room from "./Room";
+
 
 interface Player {
   x: number;
@@ -11,6 +13,7 @@ interface Player {
   color: string;
   name: string;
   coins: number;
+  room: number;
 }
 
 interface Coin {
@@ -23,11 +26,15 @@ const GameContainer = () => {
   const [players, setPlayers] = useState<{ [key:string]: Player}>({});
   const [coins, setCoins] = useState<{ [key:number|string]: Coin}>({});
   const [currentPlayerEmail, setCurrentPlayerEmail] = useState("");
-  let playerId:any = "";
+  const [currentRoom, setCurrentRoom] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+
+
+  let playerId:string = "";
   let playerRef:any;
   const allPlayersRef = ref(database, 'players');
   const allCoinsRef = ref(database, 'coins/coinList');
-
+  
 
   if (auth.currentUser) {
     playerId = auth.currentUser.uid;
@@ -37,13 +44,32 @@ const GameContainer = () => {
     if (user) {
         playerId = user.uid;
         playerRef = ref(database, `players/${playerId}`);
-        players[playerId] = players[playerId] || {};
     } 
     else {
         setCurrentPlayerEmail("");
     }
   })  
+
   
+  useEffect(() => {
+    if (playerRef && auth.currentUser) {
+      const getRoom = async () => {
+        setCurrentRoom((await get(playerRef)).val().room);
+      }
+      getRoom();
+    }
+  }, [playerRef])
+
+
+  const startApp = () => {
+    if (auth.currentUser) {
+      setLoaded(true);
+    } else {
+      window.location.href="/login"
+    }
+  }
+   
+    
     useEffect(() => {
       const collectCoin = (id:string) => {
         players[playerId].coins++;
@@ -117,21 +143,24 @@ const GameContainer = () => {
     }, []);
 
 
-
-
-
       
 
     return (
-        <div className="w-full h-full bg-emerald-100 relative">
-
-          {Object.keys(players).map((id) => {
+      <>
+      {!loaded ? 
+        <button type="button" onClick={startApp} className="w-80 h-44 text-3xl bg-gray-300">START</button>
+        :
+        <Room id={currentRoom} >
+          {Object.keys(players).filter((key) => players[key].room == currentRoom).map((id) => {
             return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[id].color} x={players[id].x} y={players[id].y} key={id} name={players[id].name} coins={players[id].coins}/>
           })}
-          {Object.keys(coins).map((id) => {
+          {Object.keys(coins).filter((key) => players[key].room == currentRoom).map((id) => {
             return <CoinIcon id={id} x={coins[id].x} y={coins[id].y} key={id}/>
           })}
-        </div>
+        </Room>
+      }
+      </>
+
     )
   }
 
