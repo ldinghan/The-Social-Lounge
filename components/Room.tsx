@@ -4,7 +4,7 @@ import { get, ref } from "firebase/database";
 
 interface Room {
     children: ReactNode;
-    id: number;
+    id: string;
 }
 const Room = ({children, id}: Room) => {
     const roomRef = ref(database, `rooms/${id}`);

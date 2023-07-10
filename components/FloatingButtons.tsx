@@ -101,7 +101,6 @@ const FloatingButtons = () => {
       }
       let interval:ReturnType<typeof setInterval>;
       if (moving) {
-        handleKeyPress(direction);
         interval = setInterval(() => {
           handleKeyPress(direction);
         }, 100)

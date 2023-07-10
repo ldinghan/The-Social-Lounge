@@ -12,10 +12,12 @@ export default function Home() {
   
   
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   onAuthStateChanged(auth, (user:any) => {
     if (user) {
       setIsLoggedIn(true);
+      setUserId(user.uid);
       setUsername(user.email.substring(0, user.email.indexOf("@")));
       
     } else {
@@ -42,7 +44,7 @@ export default function Home() {
           <>
             <p>Hi {username}!</p>
             <CoinBtn/>
-            <SettingsContainer username={username}/>
+            <SettingsContainer username={username} userid={userId}/>
           </> : <div className='my-4'></div>}
         
         <div className='w-[600px] h-[600px] flex justify-center items-center'>

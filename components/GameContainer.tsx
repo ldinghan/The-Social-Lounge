@@ -13,7 +13,7 @@ interface Player {
   color: string;
   name: string;
   coins: number;
-  room: number;
+  room: string;
 }
 
 interface Coin {
@@ -26,7 +26,7 @@ const GameContainer = () => {
   const [players, setPlayers] = useState<{ [key:string]: Player}>({});
   const [coins, setCoins] = useState<{ [key:number|string]: Coin}>({});
   const [currentPlayerEmail, setCurrentPlayerEmail] = useState("");
-  const [currentRoom, setCurrentRoom] = useState(0);
+  const [currentRoom, setCurrentRoom] = useState("");
   const [loaded, setLoaded] = useState(false);
 
 
@@ -154,7 +154,7 @@ const GameContainer = () => {
           {Object.keys(players).filter((key) => players[key].room == currentRoom).map((id) => {
             return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[id].color} x={players[id].x} y={players[id].y} key={id} name={players[id].name} coins={players[id].coins}/>
           })}
-          {Object.keys(coins).filter((key) => players[key].room == currentRoom).map((id) => {
+          {Object.keys(coins).map((id) => {
             return <CoinIcon id={id} x={coins[id].x} y={coins[id].y} key={id}/>
           })}
         </Room>

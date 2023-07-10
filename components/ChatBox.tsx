@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { database } from "../firebase";
 import { ref, serverTimestamp, get, set, update, onValue, off } from "firebase/database";
 import ChatText from "./ChatText";
@@ -26,9 +26,14 @@ const ChatBox = ({username}:ChatBox) => {
     const messageDBRef = ref(database, 'chatHistory');
 
     useEffect(() => {
+        const initChatBox = async () => {
+            setMessageCount((await get(messageCountRef)).val());
+        }
+        initChatBox();
         onValue(messageDBRef, (snapshot) => {
             setAllMessages(snapshot.val().messages);
         })
+        
         return () => {
             off(messageDBRef);
         }
