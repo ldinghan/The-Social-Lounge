@@ -22,7 +22,7 @@ const FloatingButtons = () => {
   const [moving, setMoving] = useState(false);
   const [players, setPlayers] = useState<{ [key:string]: Player}>({});
   const [coins, setCoins] = useState<{ [key:number|string]: Coin}>({});
-  const [currentPlayerEmail, setCurrentPlayerEmail] = useState("");
+
   let playerId:any = "";
   let playerRef:any;
   const allPlayersRef = ref(database, 'players');
@@ -39,9 +39,6 @@ const FloatingButtons = () => {
         playerRef = ref(database, `players/${playerId}`);
         players[playerId] = players[playerId] || {};
     } 
-    else {
-        setCurrentPlayerEmail("");
-    }
   })  
 
   useEffect(() => {
@@ -69,9 +66,6 @@ const FloatingButtons = () => {
         players[playerId].x = newX;
         players[playerId].y = newY;
         update(playerRef,  players[playerId]);
-        if (auth.currentUser && auth.currentUser.email) {
-          setCurrentPlayerEmail(auth.currentUser.email);
-        }
       }
 
       function handleKeyPress(key: any) {

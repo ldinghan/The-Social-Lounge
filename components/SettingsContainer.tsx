@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import FloatingButtons from "./FloatingButtons";
 import ChatBox from "./ChatBox";
-import { database, auth } from "../firebase";
+import { database } from "../firebase";
 import { ref, get, set } from "firebase/database";
 
 
