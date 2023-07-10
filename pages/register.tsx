@@ -29,7 +29,8 @@ function Register() {
           coins: 0,
           x: 0,
           y: 0,
-          color: `#${generateColor()}`
+          color: `#${generateColor()}`,
+          room: "0",
         });
       }
       window.location.href="/login";

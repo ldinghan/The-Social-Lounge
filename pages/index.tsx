@@ -6,7 +6,6 @@ import Navbar from '../components/Navbar';
 import GameContainer from '../components/GameContainer';
 import CoinBtn from '../components/CoinBtn';
 import SettingsContainer from '../components/SettingsContainer';
-import ChatBox from '../components/ChatBox';
 
 export default function Home() {
   
