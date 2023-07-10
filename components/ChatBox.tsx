@@ -32,11 +32,9 @@ const ChatBox = ({username}:ChatBox) => {
         initChatBox();
         onValue(messageDBRef, (snapshot) => {
             setAllMessages(snapshot.val().messages);
+            initChatBox();
         })
-        
-        return () => {
-            off(messageDBRef);
-        }
+
     }, [])
 
     const sendMessage = async () => {
