@@ -1,25 +1,42 @@
 import Link from 'next/link';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from "../firebase";
+import { auth, database } from "../firebase";
 import { useEffect, useState } from "react";
-
+import { ref, update } from "firebase/database";
 
 const Navbar = () => {
     const [navbarLoggedIn, setNavbarLoggedIn] = useState(false);
     const handleSignOut = () => {
-        signOut(auth).then(() => {
-          setNavbarLoggedIn(false);
-        }).catch((error) => {
-          console.error(error)
-        })
+        if (auth.currentUser) {
+          const playerRef = ref(database, `players/${auth.currentUser.uid}`);
+          update(playerRef, {online: false});
+          signOut(auth).then(() => {
+            setNavbarLoggedIn(false);
+          }).catch((error) => {
+            console.error(error)
+          })
+        }
     }
 
       useEffect(() => {
+        const setOffline = () => {
+          if (auth.currentUser) {
+            const playerRef = ref(database, `players/${auth.currentUser.uid}`);
+            update(playerRef, {online: false});
+          }
+        }
         onAuthStateChanged(auth, user => {
-            if (user) {
-                setNavbarLoggedIn(true);
-            }
-          })
+          if (user) {
+            setNavbarLoggedIn(true);
+            const playerRef = ref(database, `players/${user.uid}`) ;
+            update(playerRef, {online: true});
+          }
+        })
+        window.addEventListener('beforeunload', setOffline);
+
+        return () => {
+          window.removeEventListener('beforeunload', setOffline);
+        }
       }, []);
 
 

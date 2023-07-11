@@ -14,6 +14,7 @@ interface Player {
   name: string;
   coins: number;
   room: string;
+  online: boolean;
 }
 
 interface Coin {
@@ -152,7 +153,7 @@ const GameContainer = () => {
         :
         <Room id={currentRoom} >
           {Object.keys(players).filter((key) => players[key].room == currentRoom).map((id) => {
-            return <PlayerIcon currentPlayer={currentPlayerEmail} color={players[id].color} x={players[id].x} y={players[id].y} key={id} name={players[id].name} coins={players[id].coins}/>
+            return <PlayerIcon currentPlayer={currentPlayerEmail} online={players[id].online} color={players[id].color} x={players[id].x} y={players[id].y} key={id} name={players[id].name} coins={players[id].coins}/>
           })}
           {Object.keys(coins).map((id) => {
             return <CoinIcon id={id} x={coins[id].x} y={coins[id].y} key={id}/>

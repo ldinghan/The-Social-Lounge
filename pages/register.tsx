@@ -31,9 +31,10 @@ function Register() {
           y: 0,
           color: `#${generateColor()}`,
           room: "0",
+          online: true
         });
       }
-      window.location.href="/login";
+      window.location.href="/";
     } catch (error:any) {
       setError(error.message);
     }

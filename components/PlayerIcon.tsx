@@ -6,17 +6,19 @@ interface PlayerIcon {
     name: string;
     color: string;
     coins: number;
+    online: boolean;
 }
 
-const PlayerIcon = ({currentPlayer, x, y, name, color, coins}:PlayerIcon) => {
+const PlayerIcon = ({currentPlayer, x, y, name, color, coins, online}:PlayerIcon) => {
     const isCurrentPlayer:boolean = currentPlayer.substring(0, currentPlayer.indexOf("@")) == name;
     const tailwindCSS = `w-[15%] h-[15%] absolute flex flex-col justify-center items-center`;
     const style = {
         left: `${x*2}%`,
         top: `${y*2}%`,
-        backgroundColor: color,
+        backgroundColor: `${online ? color : '#999999'}`,
         border: `${isCurrentPlayer ? '3px solid #FFFFBB' : ''}`,
-        zIndex: `${isCurrentPlayer ? 999 : 1}`
+        zIndex: `${isCurrentPlayer ? 999 : online ? 99 : 1}`,
+
     }
     return (
         <>
